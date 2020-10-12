@@ -2,7 +2,7 @@ import os
 
 from requests_html import HTML
 
-from src.api import LamodaClothingParse
+from src.parse import LamodaClothingParse
 from src.models import LamodaClothing
 
 

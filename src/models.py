@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from typing import List
 
+from pydantic import BaseModel
 
-@dataclass()
-class LamodaClothing:
+
+class LamodaClothing(BaseModel):
     """
     Lamoda шмотка
 
@@ -15,7 +15,3 @@ class LamodaClothing:
     brand: str
     type: str
     images: List[str]
-
-
-
-

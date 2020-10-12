@@ -20,4 +20,4 @@ class LamodaClothingParse:
         model = self.html_to_parse.find(".product-title__model-name", first=True).text
         type_, title = model.split(" - ")
 
-        return LamodaClothing(title, brand, type_, images)
+        return LamodaClothing(title=title, brand=brand, type=type_, images=images)
