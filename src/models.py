@@ -3,7 +3,7 @@ from typing import List
 from pydantic import BaseModel
 
 
-class LamodaClothing(BaseModel):
+class Clothing(BaseModel):
     """
     Lamoda шмотка
 
@@ -15,3 +15,4 @@ class LamodaClothing(BaseModel):
     brand: str
     type: str
     images: List[str]
+    color: str = "ffffff"

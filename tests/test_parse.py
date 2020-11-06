@@ -2,18 +2,18 @@ import os
 
 from requests_html import HTML
 
-from src.parse import LamodaClothingParse
-from src.models import LamodaClothing
+from src.use_cases import _LamodaClothingHTMLParser
+from src.models import Clothing
 
 
 def test_lamoda_clothing_parse(test_data_dir: str) -> None:
     with open(os.path.join(test_data_dir, "lamoda.html"), encoding="utf-8") as f:
         html_to_parse = HTML(html=f.read())
 
-    clothing = LamodaClothingParse(html_to_parse)()
+    clothing = _LamodaClothingHTMLParser(html_to_parse)()
     clothing.images = sorted(clothing.images)
 
-    assert clothing == LamodaClothing(
+    assert clothing == Clothing(
         title="CHERLO",
         brand='Mango Man',
         type='Футболка',

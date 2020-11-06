@@ -4,9 +4,9 @@ from fastapi import FastAPI, UploadFile, File, Depends
 
 from src import config
 from src.cdn.use_cases import UploadFileToObjectStorage
-from src.models import LamodaClothing
-from src.parse import LamodaClothingParse
-from src.utils import get_html_async, download_image_file
+from src.models import Clothing
+from src.use_cases import _LamodaClothingHTMLParser, ParseLamodaClothing
+from src.utils import download_image_file
 from src.view_models import UrlDto
 
 app = FastAPI()
@@ -18,10 +18,11 @@ def get_config() -> config.Config:
 
 
 @app.get("/")
-async def parse(url: str) -> LamodaClothing:
+async def parse(url: str) -> Clothing:
     """Скачивает Lamoda-страничку по {url}, парсит ее, возвращает LamodaClothing"""
-    html = await get_html_async(url)
-    clothing = LamodaClothingParse(html)()
+    # todo как зависимость
+    # todo ParseLamodaClothing + _LamodaClothingHTMLParser - хуевый нейминг
+    clothing = await ParseLamodaClothing(_LamodaClothingHTMLParser())(url)
     return clothing
 
 
