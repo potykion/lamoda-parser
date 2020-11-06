@@ -15,12 +15,12 @@ class S3Config:
 
 
 @dataclass()
-class UploadFile:
+class UploadFileToObjectStorage:
     bucket: str
     dir: str
     config: S3Config
 
-    async def __call__(self, file_like: io.BinaryIO, file_name: str) -> str:
+    async def __call__(self, file_like: io.IO, file_name: str) -> str:
         async with aioboto3.client("s3", **asdict(self.config)) as s3:
             await s3.upload_fileobj(file_like, self.bucket, f"{self.dir}/{file_name}")
 
@@ -28,7 +28,7 @@ class UploadFile:
 
 
 async def main():
-    upload_file = UploadFile(
+    upload_file = UploadFileToObjectStorage(
         bucket="w2w", dir="images",
         config=S3Config(
             aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
