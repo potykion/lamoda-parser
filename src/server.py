@@ -3,10 +3,10 @@ from functools import lru_cache
 from fastapi import FastAPI, UploadFile, File, Depends
 
 from src import config
-from src.cdn.use_cases import UploadFileToObjectStorage, S3Config
+from src.cdn.use_cases import UploadFileToObjectStorage
 from src.models import LamodaClothing
 from src.parse import LamodaClothingParse
-from src.utils import get_html_async
+from src.utils import get_html_async, download_image_file
 from src.view_models import UrlDto
 
 app = FastAPI()
@@ -37,5 +37,11 @@ async def upload_image_via_file(image: UploadFile = File(...), config_: config.C
 
 
 @app.post("/upload_image_via_link")
-async def upload_image_via_link(image: str):
-    ...
+async def upload_image_via_link(image_url: str, config_: config.Config = Depends(get_config)) -> UrlDto:
+    upload_file = UploadFileToObjectStorage(
+        bucket="w2w", dir="images",
+        config=config_.s3_config
+    )
+    image_data, image_name = await download_image_file(image_url)
+    url = await upload_file(image_data, image_name)
+    return UrlDto(url=url)
