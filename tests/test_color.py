@@ -2,7 +2,7 @@ import pytest
 import requests
 from PIL import Image
 
-from src.utils import search_most_common_color
+from src.core.image import search_most_common_color
 
 
 @pytest.mark.parametrize(

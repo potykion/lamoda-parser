@@ -2,12 +2,13 @@ from functools import lru_cache
 
 from fastapi import FastAPI, UploadFile, File, Depends
 
-from src import config
-from src.cdn.use_cases import UploadFileToObjectStorage
-from src.models import Clothing
-from src.use_cases import _LamodaClothingHTMLParser, ParseLamodaClothing
-from src.utils import download_image_file
-from src.view_models import UrlDto
+from src.core.http import GetHtml, GetBinary
+from src.core.str_ import random_file_name
+from src.app import config
+from src.core.cdn import UploadFileToObjectStorage
+from src.clothing.models import Clothing
+from src.clothing.use_cases import ParseLamodaClothing
+from src.app.view_models import UrlDto
 
 app = FastAPI()
 
@@ -20,9 +21,7 @@ def get_config() -> config.Config:
 @app.get("/")
 async def parse(url: str) -> Clothing:
     """Скачивает Lamoda-страничку по {url}, парсит ее, возвращает LamodaClothing"""
-    # todo как зависимость
-    # todo ParseLamodaClothing + _LamodaClothingHTMLParser - хуевый нейминг
-    clothing = await ParseLamodaClothing(_LamodaClothingHTMLParser())(url)
+    clothing = await ParseLamodaClothing(GetHtml(), GetBinary())(url)
     return clothing
 
 
@@ -33,7 +32,9 @@ async def upload_image_via_file(image: UploadFile = File(...), config_: config.C
         bucket="w2w", dir="images",
         config=config_.s3_config
     )
+
     url = await upload_file(image.file, image.filename)
+
     return UrlDto(url=url)
 
 
@@ -43,6 +44,11 @@ async def upload_image_via_link(image_url: str, config_: config.Config = Depends
         bucket="w2w", dir="images",
         config=config_.s3_config
     )
-    image_data, image_name = await download_image_file(image_url)
-    url = await upload_file(image_data, image_name)
+    get_binary = GetBinary()
+
+    url = await upload_file(
+        file_like=await get_binary(image_url),
+        file_name=random_file_name()
+    )
+
     return UrlDto(url=url)

@@ -15,4 +15,4 @@ EXPOSE 80
 
 COPY . /app
 
-CMD ["poetry", "run", "uvicorn", "src.server:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["poetry", "run", "uvicorn", "src.app.app:app", "--host", "0.0.0.0", "--port", "80"]

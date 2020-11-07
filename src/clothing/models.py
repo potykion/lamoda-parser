@@ -12,7 +12,6 @@ class Clothing(BaseModel):
     """
 
     title: str
-    brand: str
     type: str
     images: List[str]
     color: str = "ffffff"

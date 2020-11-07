@@ -1,6 +1,6 @@
 from pydantic import BaseSettings
 
-from src.cdn.use_cases import S3Config
+from src.core.cdn import S3Config
 
 
 class Config(BaseSettings):
