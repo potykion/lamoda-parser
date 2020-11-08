@@ -13,8 +13,12 @@ class GetHtml:
 
     async def __call__(self, url: str) -> HTML:
         session = AsyncHTMLSession()
+
         resp: HTMLResponse = await session.get(url)
         await resp.html.arender()
+
+        await session.close()
+
         return resp.html
 
 

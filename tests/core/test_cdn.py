@@ -6,7 +6,7 @@ from src.core.cdn import UploadFileToObjectStorage, S3Config
 from tests.conftest import ReadFromTestDataFunc
 
 
-@pytest.mark.skip("Коннектится к реальной ЦДНке")
+@pytest.mark.skip("Кидает запрос в интернет")
 @pytest.mark.asyncio
 async def test_upload_file_to_object_storage(read_from_test_data: ReadFromTestDataFunc, ):
     upload_file = UploadFileToObjectStorage(

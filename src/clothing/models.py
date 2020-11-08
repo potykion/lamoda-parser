@@ -4,12 +4,7 @@ from pydantic import BaseModel
 
 
 class Clothing(BaseModel):
-    """
-    Lamoda шмотка
-
-    Пример:
-    https://www.lamoda.ru/p/he002emklgv2/clothes-hebymango-futbolka/
-    """
+    """Шмотка"""
 
     title: str
     type: str

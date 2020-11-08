@@ -2,7 +2,7 @@ from dataclasses import dataclass, asdict
 from typing import io
 
 import aioboto3
-
+from fastapi import Depends
 
 @dataclass()
 class S3Config:

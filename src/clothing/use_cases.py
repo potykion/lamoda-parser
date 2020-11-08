@@ -11,7 +11,7 @@ from src.core.image import search_most_common_color
 class ParseLamodaHtml:
     def __call__(self, html: HTML) -> Clothing:
         img_tags = html.find("img.x-gallery__image[src$='.jpg']")
-        images = [*{f"https:{t.attrs['src']}" for t in img_tags}]
+        images = sorted({f"https:{t.attrs['src']}" for t in img_tags})
 
         brand = html.find(".product-title__brand-name", first=True).text
         model = html.find(".product-title__model-name", first=True).text
