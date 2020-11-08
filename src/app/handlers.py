@@ -34,12 +34,12 @@ async def upload_image_via_file(
 
 @router.post("/upload_image_via_link", response_model=UrlDto)
 async def upload_image_via_link(
-    image_url: AnyHttpUrl,
+    image_url: UrlDto,
     upload_file: UploadFileToObjectStorage = Depends(get_upload_file),
     get_binary: GetBinary = Depends(),
 ) -> UrlDto:
     url = await upload_file(
-        file_like=await get_binary(image_url),
+        file_like=await get_binary(image_url.url),
         file_name=random_file_name()
     )
 
