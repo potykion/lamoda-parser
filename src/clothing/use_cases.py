@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from PIL import Image
+from pydantic import AnyHttpUrl
 from requests_html import HTML
 
 from src.clothing.models import Clothing
@@ -28,7 +29,7 @@ class ParseLamodaClothing:
     get_binary: GetBinary
     parse_lamoda_html: ParseLamodaHtml = ParseLamodaHtml()
 
-    async def __call__(self, url: str) -> Clothing:
+    async def __call__(self, url: AnyHttpUrl) -> Clothing:
         html = await self.get_html(url)
         clothing = self.parse_lamoda_html(html)
 

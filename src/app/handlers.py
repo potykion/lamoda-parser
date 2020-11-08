@@ -1,6 +1,7 @@
 from fastapi import UploadFile, File, Depends, APIRouter
+from pydantic import AnyHttpUrl
 
-from src.app.dependencies import get_parse_lamoda_clothing, get_upload_file, get_get_binary
+from src.app.dependencies import get_parse_lamoda_clothing, get_upload_file
 from src.app.view_models import UrlDto
 from src.clothing.models import Clothing
 from src.clothing.use_cases import ParseLamodaClothing
@@ -13,7 +14,7 @@ router = APIRouter()
 
 @router.get("/parse", response_model=Clothing)
 async def parse(
-    url: str,
+    url: AnyHttpUrl,
     parse_lamoda_clothing: ParseLamodaClothing = Depends(get_parse_lamoda_clothing)
 ) -> Clothing:
     """Скачивает Lamoda-страничку по {url}, парсит ее, возвращает LamodaClothing"""
@@ -33,9 +34,9 @@ async def upload_image_via_file(
 
 @router.post("/upload_image_via_link", response_model=UrlDto)
 async def upload_image_via_link(
-    image_url: str,
+    image_url: AnyHttpUrl,
     upload_file: UploadFileToObjectStorage = Depends(get_upload_file),
-    get_binary: GetBinary = Depends(get_get_binary),
+    get_binary: GetBinary = Depends(),
 ) -> UrlDto:
     url = await upload_file(
         file_like=await get_binary(image_url),

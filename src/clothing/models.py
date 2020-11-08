@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, AnyHttpUrl
 
 
 class Clothing(BaseModel):
@@ -8,5 +8,5 @@ class Clothing(BaseModel):
 
     title: str
     type: str
-    images: List[str]
+    images: List[AnyHttpUrl]
     color: str = "ffffff"

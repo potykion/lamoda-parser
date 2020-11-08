@@ -1,5 +1,5 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, AnyHttpUrl
 
 
 class UrlDto(BaseModel):
-    url: str
+    url: AnyHttpUrl
