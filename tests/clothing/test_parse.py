@@ -1,15 +1,13 @@
-import os
-
 from requests_html import HTML
 
 from src.clothing.models import Clothing
 from src.clothing.use_cases import ParseLamodaHtml
+from tests.conftest import ReadFromTestDataFunc
 
 
-def test_lamoda_clothing_parse(test_data_dir: str) -> None:
+def test_lamoda_clothing_parse(read_from_test_data: ReadFromTestDataFunc) -> None:
     parse = ParseLamodaHtml()
-    with open(os.path.join(test_data_dir, "lamoda.html"), encoding="utf-8") as f:
-        html_to_parse = HTML(html=f.read())
+    html_to_parse = HTML(html=read_from_test_data("lamoda.html"))
 
     clothing = parse(html_to_parse)
     clothing.images = sorted(clothing.images)

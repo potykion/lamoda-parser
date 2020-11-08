@@ -14,5 +14,6 @@ from src.core.image import search_most_common_color
     ]
 )
 def test_most_common_color_search(url: str, color: str) -> None:
+    # todo кидается реальный запрос - надо из файла читать
     img = Image.open(requests.get(url, stream=True).raw)
     assert search_most_common_color(img) == color
