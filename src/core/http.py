@@ -1,8 +1,7 @@
 from io import BytesIO
-from typing import io
+from typing import IO
 
 import httpx
-from pydantic import AnyHttpUrl
 from requests_html import HTML, AsyncHTMLSession, HTMLResponse
 
 
@@ -12,7 +11,7 @@ class GetHtml:
     https://requests.readthedocs.io/projects/requests-html/en/latest/#javascript-support
     """
 
-    async def __call__(self, url: AnyHttpUrl) -> HTML:
+    async def __call__(self, url: str) -> HTML:
         session = AsyncHTMLSession()
 
         resp: HTMLResponse = await session.get(url)
@@ -26,7 +25,7 @@ class GetHtml:
 class GetBinary:
     """Качает файл в бинарном виде"""
 
-    async def __call__(self, url: AnyHttpUrl) -> io.IO:
+    async def __call__(self, url: str) -> IO:
         async with httpx.AsyncClient() as client:
-            async with client.stream('GET', url) as response:
+            async with client.stream("GET", url) as response:
                 return BytesIO(await response.aread())

@@ -15,7 +15,7 @@ router = APIRouter()
 @router.get("/parse", response_model=Clothing)
 async def parse(
     url: AnyHttpUrl,
-    parse_lamoda_clothing: ParseLamodaClothing = Depends(get_parse_lamoda_clothing)
+    parse_lamoda_clothing: ParseLamodaClothing = Depends(get_parse_lamoda_clothing),
 ) -> Clothing:
     """Скачивает Lamoda-страничку по {url}, парсит ее, возвращает LamodaClothing"""
     clothing = await parse_lamoda_clothing(url)
@@ -39,8 +39,7 @@ async def upload_image_via_link(
     get_binary: GetBinary = Depends(),
 ) -> UrlDto:
     url = await upload_file(
-        file_like=await get_binary(image_url.url),
-        file_name=random_file_name()
+        file_like=await get_binary(image_url.url), file_name=random_file_name()
     )
 
     return UrlDto(url=url)

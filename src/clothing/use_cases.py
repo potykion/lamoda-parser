@@ -29,7 +29,7 @@ class ParseLamodaClothing:
     get_binary: GetBinary
     parse_lamoda_html: ParseLamodaHtml = ParseLamodaHtml()
 
-    async def __call__(self, url: AnyHttpUrl) -> Clothing:
+    async def __call__(self, url: str) -> Clothing:
         html = await self.get_html(url)
         clothing = self.parse_lamoda_html(html)
 

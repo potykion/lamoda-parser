@@ -1,5 +1,5 @@
 from dataclasses import dataclass, asdict
-from typing import io
+from typing import cast, IO
 
 import aioboto3
 from pydantic import AnyHttpUrl
@@ -19,9 +19,11 @@ class UploadFileToObjectStorage:
     dir: str
     config: S3Config
 
-    async def __call__(self, file_like: io.IO, file_name: str) -> AnyHttpUrl:
+    async def __call__(self, file_like: IO, file_name: str) -> AnyHttpUrl:
         async with aioboto3.client("s3", **asdict(self.config)) as s3:
             await s3.upload_fileobj(file_like, self.bucket, f"{self.dir}/{file_name}")
 
-        return f"{self.config.endpoint_url}/{self.bucket}/{self.dir}/{file_name}"
-
+        return cast(
+            AnyHttpUrl,
+            f"{self.config.endpoint_url}/{self.bucket}/{self.dir}/{file_name}",
+        )

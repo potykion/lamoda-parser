@@ -8,5 +8,3 @@ def random_file_name(extension: str = "jpg") -> str:
     """
     file_name = str(uuid.uuid4().hex)
     return f"{file_name}.{extension}"
-
-

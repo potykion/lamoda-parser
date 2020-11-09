@@ -14,17 +14,12 @@ def get_config() -> Config:
 
 
 def get_parse_lamoda_clothing(
-    get_html: GetHtml = Depends(),
-    get_binary: GetBinary = Depends()
+    get_html: GetHtml = Depends(), get_binary: GetBinary = Depends()
 ) -> ParseLamodaClothing:
     return ParseLamodaClothing(get_html, get_binary)
 
 
-def get_upload_file(
-    config: Config = Depends(get_config)
-) -> UploadFileToObjectStorage:
+def get_upload_file(config: Config = Depends(get_config)) -> UploadFileToObjectStorage:
     return UploadFileToObjectStorage(
-        bucket="w2w",
-        dir="images",
-        config=config.s3_config
+        bucket="w2w", dir="images", config=config.s3_config
     )
