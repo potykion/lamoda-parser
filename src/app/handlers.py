@@ -27,6 +27,7 @@ async def upload_image_via_file(
     image: UploadFile = File(...),
     upload_file: UploadFileToObjectStorage = Depends(get_upload_file),
 ) -> UrlDto:
+    """Загружает картинку ее в цдн"""
     url = await upload_file(image.file, image.filename)
 
     return UrlDto(url=url)
@@ -38,6 +39,8 @@ async def upload_image_via_link(
     upload_file: UploadFileToObjectStorage = Depends(get_upload_file),
     get_binary: GetBinary = Depends(),
 ) -> UrlDto:
+    """Скачивает картинку по ссылке, загружает ее в цдн с рандомным именем"""
+    # todo вынести в сервис
     url = await upload_file(
         file_like=await get_binary(image_url.url), file_name=random_file_name()
     )

@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 from PIL import Image
-from pydantic import AnyHttpUrl
 from requests_html import HTML
 
 from src.clothing.models import Clothing
@@ -10,7 +9,10 @@ from src.core.image import search_most_common_color
 
 
 class ParseLamodaHtml:
+    """Парсит хтмл в Ламода шмотку"""
+
     def __call__(self, html: HTML) -> Clothing:
+        """Парсит хтмл в Ламода шмотку"""
         img_tags = html.find("img.x-gallery__image[src$='.jpg']")
         images = sorted({f"https:{t.attrs['src']}" for t in img_tags})
 
@@ -25,11 +27,17 @@ class ParseLamodaHtml:
 
 @dataclass()
 class ParseLamodaClothing:
+    """Парсит Ламода-шмотку"""
+
     get_html: GetHtml
     get_binary: GetBinary
     parse_lamoda_html: ParseLamodaHtml = ParseLamodaHtml()
 
     async def __call__(self, url: str) -> Clothing:
+        """
+        Скачивает хтмл по ссылке на Ламода шмотку, парсит хтмл в шмотку.
+        Если есть картинки, то скачивает первую и определяет самый частый цвет.
+        """
         html = await self.get_html(url)
         clothing = self.parse_lamoda_html(html)
 

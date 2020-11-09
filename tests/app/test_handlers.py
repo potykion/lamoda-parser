@@ -15,6 +15,11 @@ def test_parse(
     read_from_test_data: ReadFromTestDataFunc,
     clothing_with_color: Clothing,
 ) -> None:
+    """
+    Arrange: замоканные скачивание хтмл и скачивание картинки
+    Act: кидаем гет-запрос на парс ссылки на шмотку
+    Assert: респонс содержит шмотку
+    """
     app.dependency_overrides[GetHtml] = lambda: AsyncMock(
         return_value=HTML(html=read_from_test_data("lamoda.html"))
     )
@@ -37,6 +42,11 @@ def test_parse(
 def test_upload_image_via_file(
     client: TestClient, read_from_test_data: ReadFromTestDataFunc
 ) -> None:
+    """
+    Arrange: замоканная загрузка картинки в цдн
+    Act: кидаем пост-запрос на загрузку картинки через файл
+    Assert: в респонсе содержится ссылка на загруженную картинку
+    """
     app.dependency_overrides[get_upload_file] = lambda: AsyncMock(
         return_value="https://storage.yandexcloud.net/w2w/images/kartinka.gif"
     )
@@ -52,6 +62,11 @@ def test_upload_image_via_file(
 def test_upload_image_via_link(
     client: TestClient, read_from_test_data: ReadFromTestDataFunc
 ) -> None:
+    """
+    Arrange: замоканные скачивание картинки и загрузка картинки в цдн
+    Act: кидаем пост-запрос на загрузку картинки через ссылку
+    Assert: в респонсе содержится ссылка на загруженную картинку
+    """
     app.dependency_overrides[GetBinary] = lambda: AsyncMock(
         return_value=read_from_test_data("kartinka.gif", binary=True)
     )

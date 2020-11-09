@@ -12,6 +12,7 @@ class GetHtml:
     """
 
     async def __call__(self, url: str) -> HTML:
+        """Загружает html, выполняя js"""
         session = AsyncHTMLSession()
 
         resp: HTMLResponse = await session.get(url)
@@ -26,6 +27,7 @@ class GetBinary:
     """Качает файл в бинарном виде"""
 
     async def __call__(self, url: str) -> IO:
+        """Качает файл в бинарном виде"""
         async with httpx.AsyncClient() as client:
             async with client.stream("GET", url) as response:
                 return BytesIO(await response.aread())

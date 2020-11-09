@@ -11,7 +11,12 @@ from tests.conftest import ReadFromTestDataFunc
 @pytest.mark.asyncio
 async def test_upload_file_to_object_storage(
     read_from_test_data: ReadFromTestDataFunc,
-):
+) -> None:
+    """
+    Arrange: объект загрузки файла в цдн, файл для загрузки
+    Act: загружаем файл
+    Assert: урл загруженного файла = ожидаемому урлу
+    """
     upload_file = UploadFileToObjectStorage(
         bucket="w2w",
         dir="images",
