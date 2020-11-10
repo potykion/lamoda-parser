@@ -3,6 +3,6 @@ services:
   w2w:
     image: potykion/lamoda-parser
     ports:
-      - "8089:80"
+      - "8098:80"
     env_file: .env
     restart: unless-stopped
