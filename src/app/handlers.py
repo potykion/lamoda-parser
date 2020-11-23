@@ -1,8 +1,11 @@
-from fastapi import UploadFile, File, Depends, APIRouter
+from typing import List, IO
+
+from fastapi import UploadFile, File, Depends, APIRouter, Form
 from pydantic import AnyHttpUrl
 
-from src.app.dependencies import get_parse_lamoda_clothing, get_upload_file
-from src.app.view_models import UrlDto
+from src.app.config import Config
+from src.app.dependencies import get_parse_lamoda_clothing, get_upload_file, get_config
+from src.app.view_models import UrlDto, IdDto
 from src.clothing.models import Clothing
 from src.clothing.use_cases import ParseLamodaClothing
 from src.core.cdn import UploadFileToObjectStorage
@@ -46,3 +49,16 @@ async def upload_image_via_link(
     )
 
     return UrlDto(url=url)
+
+
+@router.post("/clothing/create", response_model=IdDto)
+async def create_clothing(
+    title: str = Form(...),
+    type: str = Form(...),
+    color: str = Form(...),
+    image_urls: List[str] = List[Form],
+    image_files: List[UploadFile] = List[File],
+    create_clothing: CreateClothing = Depends(get_create_clothing)
+) -> IdDto:
+    """Создает шмотку, загружая картинки в ЦДН, и засовывая шмотку в БД"""
+    files = [file.file for file in image_files]

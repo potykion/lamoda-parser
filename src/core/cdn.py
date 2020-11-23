@@ -20,6 +20,9 @@ class UploadFileToObjectStorage:
     """
     Загружает файл в Yandex Object Storage
     Yandex Object Storage - CDN, аналог Amazon S3
+
+    https://aioboto3.readthedocs.io/en/latest/usage.html#s3-examples
+    https://cloud.yandex.ru/docs/storage/tools/boto
     """
 
     bucket: str

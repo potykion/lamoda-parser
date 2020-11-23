@@ -8,6 +8,7 @@ class Config(BaseSettings):
 
     aws_access_key_id: str
     aws_secret_access_key: str
+    db_url: str
 
     class Config:
         env_file = ".env"

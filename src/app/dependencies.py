@@ -1,9 +1,12 @@
 from functools import lru_cache
 
+from aiopg.sa import SAConnection
 from fastapi import Depends
 
+from src.app.app import db_var
 from src.app.config import Config
-from src.clothing.use_cases import ParseLamodaClothing
+from src.clothing.db import ClothingRepo
+from src.clothing.use_cases import ParseLamodaClothing, CreateClothing
 from src.core.cdn import UploadFileToObjectStorage
 from src.core.http import GetHtml, GetBinary
 
@@ -25,4 +28,27 @@ def get_upload_file(config: Config = Depends(get_config)) -> UploadFileToObjectS
     """Зависимость загрузки файла в цдн"""
     return UploadFileToObjectStorage(
         bucket="w2w", dir="images", config=config.s3_config
+    )
+
+
+async def get_connection() -> SAConnection:
+    async with db_var.get().acquire() as conn:
+        yield conn
+
+
+def get_clothing_repo(connection: SAConnection = Depends(get_connection)) -> ClothingRepo:
+    return ClothingRepo(connection)
+
+
+def get_create_clothing(
+    config: Config = Depends(get_config),
+    get_binary: GetBinary = Depends(),
+    upload_file: UploadFileToObjectStorage = Depends(get_upload_file),
+    clothing_repo: ClothingRepo = Depends(get_clothing_repo)
+) -> CreateClothing:
+    return CreateClothing(
+        config,
+        get_binary,
+        upload_file,
+        clothing_repo
     )
