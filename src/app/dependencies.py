@@ -3,8 +3,8 @@ from functools import lru_cache
 from aiopg.sa import SAConnection
 from fastapi import Depends
 
-from src.app.app import db_var
 from src.app.config import Config
+from src.app.meta import db_var
 from src.clothing.db import ClothingRepo
 from src.clothing.use_cases import ParseLamodaClothing, CreateClothing
 from src.core.cdn import UploadFileToObjectStorage
@@ -32,11 +32,15 @@ def get_upload_file(config: Config = Depends(get_config)) -> UploadFileToObjectS
 
 
 async def get_connection() -> SAConnection:
+    """Создает соединение к бд"""
     async with db_var.get().acquire() as conn:
         yield conn
 
 
-def get_clothing_repo(connection: SAConnection = Depends(get_connection)) -> ClothingRepo:
+def get_clothing_repo(
+    connection: SAConnection = Depends(get_connection),
+) -> ClothingRepo:
+    """Зависимость репо для работы со шмотками"""
     return ClothingRepo(connection)
 
 
@@ -44,11 +48,7 @@ def get_create_clothing(
     config: Config = Depends(get_config),
     get_binary: GetBinary = Depends(),
     upload_file: UploadFileToObjectStorage = Depends(get_upload_file),
-    clothing_repo: ClothingRepo = Depends(get_clothing_repo)
+    clothing_repo: ClothingRepo = Depends(get_clothing_repo),
 ) -> CreateClothing:
-    return CreateClothing(
-        config,
-        get_binary,
-        upload_file,
-        clothing_repo
-    )
+    """Зависимость создания шмотки"""
+    return CreateClothing(config, get_binary, upload_file, clothing_repo)

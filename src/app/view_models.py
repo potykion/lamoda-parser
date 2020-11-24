@@ -9,4 +9,5 @@ class UrlDto(BaseModel):
 
 class IdDto(BaseModel):
     """ДТОшка с айди"""
+
     id: int

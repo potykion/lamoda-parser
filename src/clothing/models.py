@@ -1,9 +1,10 @@
 from typing import List
 
-from pydantic import BaseModel, AnyHttpUrl
+from pydantic import AnyHttpUrl
+from repka.repositories.base import IdModel
 
 
-class Clothing(BaseModel):
+class Clothing(IdModel):
     """Шмотка"""
 
     title: str

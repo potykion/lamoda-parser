@@ -18,4 +18,6 @@ clothing_table = sa.Table(
 
 
 class ClothingRepo(AiopgRepository[Clothing]):
+    """Репо для работы со шмотками"""
+
     table = clothing_table

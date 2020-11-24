@@ -55,6 +55,8 @@ class ParseLamodaClothing:
 
 @dataclass()
 class CreateClothing:
+    """Создание шмотки"""
+
     config: Config
     get_binary: GetBinary
     upload_file: UploadFileToObjectStorage
@@ -67,13 +69,15 @@ class CreateClothing:
         color: str,
         image_urls: List[str],
         image_files: List[IO],
-    ):
+    ) -> int:
+        """Создание шмотки"""
         # загружаем фотки в цдн
-        image_files: List[IO] = [
+        image_files = [
             *image_files,
             *(
                 await self.get_binary(url)
-                for url in image_urls if not url.startswith(self.config.s3_config.endpoint_url)
+                for url in image_urls
+                if not url.startswith(self.config.s3_config.endpoint_url)
             ),
         ]
         cdn_image_urls = [
@@ -85,7 +89,7 @@ class CreateClothing:
             *(
                 await self.upload_file(file, random_file_name("jpg"))
                 for file in image_files
-            )
+            ),
         ]
 
         # создаем шмотку
