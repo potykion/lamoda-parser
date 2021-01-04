@@ -1,10 +1,12 @@
+from typing import cast
 from unittest.mock import AsyncMock
 
 import pytest
 from requests_html import HTML
 
+from src.app.config import Config
 from src.clothing.models import Clothing
-from src.clothing.use_cases import ParseLamodaHtml, ParseLamodaClothing
+from src.clothing.use_cases import ParseLamodaHtml, ParseLamodaClothing, CreateClothing
 from tests.conftest import ReadFromTestDataFunc
 
 
@@ -46,3 +48,26 @@ async def test_parse_lamoda_clothing(
     )
 
     assert actual_clothing == clothing_with_color
+
+@pytest.mark.asyncio
+async def test_create_clothing():
+    create_clothing = CreateClothing(
+        config=Config(db_url=""),
+        get_binary=AsyncMock(),
+        upload_file=AsyncMock(),
+        clothing_repo=AsyncMock()
+    )
+    clothing = await create_clothing(
+        title="mango man",
+        type="shirt",
+        color="ff0000",
+        image_urls=[],
+        image_files=[],
+    )
+
+    assert clothing == Clothing(
+        title="mango man",
+        type="shirt",
+        color="ff0000",
+    )
+    cast(AsyncMock, create_clothing.clothing_repo.insert).assert_awaited()

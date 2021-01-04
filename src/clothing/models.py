@@ -9,5 +9,5 @@ class Clothing(IdModel):
 
     title: str
     type: str
-    images: List[AnyHttpUrl]
     color: str = "ffffff"
+    images: List[AnyHttpUrl] = []

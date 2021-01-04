@@ -69,7 +69,7 @@ class CreateClothing:
         color: str,
         image_urls: List[str],
         image_files: List[IO],
-    ) -> int:
+    ) -> Clothing:
         """Создание шмотки"""
         # загружаем фотки в цдн
         image_files = [
@@ -101,7 +101,6 @@ class CreateClothing:
         )
 
         # суем шмотку в бд
-        id_ = await self.clothing_repo.insert(clothing)
+        clothing = await self.clothing_repo.insert(clothing)
 
-        # возвращаем айди
-        return id_
+        return clothing
